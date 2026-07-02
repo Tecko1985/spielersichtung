@@ -94,7 +94,7 @@ function playerRowHtml(p) {
   const status = computeStatus(p);
   const flag = p.stuetzpunktSpieler ? `<span class="stuetzpunkt-flag" title="Stützpunktspieler">★ ${escapeHtml(p.stuetzpunkt || "")}</span>` : "";
   return `
-    <div class="list-row" data-id="${p.id}">
+    <div class="list-row" data-id="${escapeHtml(p.id)}">
       <div>
         <div class="lr-name">${escapeHtml(p.nachname)}${p.vorname ? ", " + escapeHtml(p.vorname) : ""}</div>
         <div class="lr-sub">${escapeHtml(p.geburtsdatum || "")}</div>
@@ -144,7 +144,7 @@ function clubRowHtml(c) {
   const primary = c.kontakte && c.kontakte[0];
   const primaryLabel = primary ? (primary.name || primary.email || primary.telefon || "") : "";
   return `
-    <div class="club-list-row" data-id="${c.id}">
+    <div class="club-list-row" data-id="${escapeHtml(c.id)}">
       <div class="lr-name">${escapeHtml(c.name)}</div>
       <div class="lr-sub">${escapeHtml(c.ort || "—")}</div>
       <div class="lr-sub">${escapeHtml(primaryLabel || "—")}</div>
