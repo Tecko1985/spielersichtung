@@ -38,7 +38,11 @@ async function gatewayRequest(payload) {
   if (resp.status === 401) throw new NotLoggedInError("Sitzung abgelaufen");
   if (resp.status === 403) throw new Error("Kein Zugriff auf dieses Tool.");
   if (resp.status === 409) throw new ConflictError();
-  if (!resp.ok) throw new Error(`Gateway-Fehler (HTTP ${resp.status})`);
+  if (!resp.ok) {
+    let detail = "";
+    try { const b = await resp.json(); if (b && b.error) detail = ": " + b.error; } catch (_) {}
+    throw new Error(`Gateway-Fehler (HTTP ${resp.status})${detail}`);
+  }
   return resp.json();
 }
 

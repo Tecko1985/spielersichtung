@@ -1,6 +1,18 @@
-const APP_VERSION = "1.0";
+const APP_VERSION = "1.1";
 
 const APP_CHANGELOG = [
+  {
+    version: "1.1",
+    groups: [
+      {
+        title: "Speicherung",
+        items: [
+          "Beim ersten Import wird der Ablageordner in der Nextcloud jetzt automatisch angelegt — kein manueller Zwischenschritt mehr nötig.",
+          "Sichtbare Rückmeldung im Kopfbereich, ob Änderungen gespeichert wurden; der Import bestätigt erst nach erfolgreichem Speichern."
+        ]
+      }
+    ]
+  },
   {
     version: "1.0",
     groups: [

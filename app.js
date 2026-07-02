@@ -338,7 +338,7 @@ function deleteVerein() {
 function handleImportFile(file) {
   if (!file || appData.players.length > 0) return;
   const reader = new FileReader();
-  reader.onload = () => {
+  reader.onload = async () => {
     let parsed;
     try {
       parsed = JSON.parse(reader.result);
@@ -355,8 +355,9 @@ function handleImportFile(file) {
     if (!confirm(`Wirklich ${players.length} Spieler und ${clubs.length} Vereine importieren?`)) return;
     appData.players = players;
     appData.clubs = clubs;
-    persist();
     renderAll();
+    const ok = await saveNow();
+    if (ok) alert(`Import erfolgreich gespeichert: ${players.length} Spieler und ${clubs.length} Vereine.`);
   };
   reader.readAsText(file, "utf-8");
 }
@@ -371,19 +372,40 @@ function switchTab(tab) {
 }
 
 // ---------- Gateway: Laden / Speichern / Konflikte ----------
+function setSaveStatus(text, kind) {
+  const el = document.getElementById("save-status");
+  if (!el) return;
+  el.textContent = text;
+  el.className = "header-status" + (kind ? " is-" + kind : "");
+}
+
 function persist() {
   clearTimeout(persistTimer);
+  setSaveStatus("Änderung noch nicht gespeichert…", "pending");
   persistTimer = setTimeout(doPersist, 300);
 }
 
+// Sofort speichern (ohne Debounce) und Erfolg zurückmelden — für den Import,
+// der erst nach bestätigtem Speichern als abgeschlossen gelten soll.
+async function saveNow() {
+  clearTimeout(persistTimer);
+  return doPersist();
+}
+
 async function doPersist() {
+  setSaveStatus("Speichern…", "pending");
   try {
     await gatewaySave(appData);
+    const t = new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+    setSaveStatus("Gespeichert " + t, "ok");
+    return true;
   } catch (e) {
-    if (e instanceof ConflictError) { await reloadAfterConflict(); return; }
-    if (e instanceof NotLoggedInError) { showConnectScreen("Sitzung abgelaufen — bitte neu anmelden."); return; }
+    if (e instanceof ConflictError) { await reloadAfterConflict(); setSaveStatus("Von anderem Gerät aktualisiert", ""); return false; }
+    if (e instanceof NotLoggedInError) { showConnectScreen("Sitzung abgelaufen — bitte neu anmelden."); return false; }
     console.error("Speichern fehlgeschlagen", e);
+    setSaveStatus("Nicht gespeichert", "error");
     alert("Speichern fehlgeschlagen: " + e.message);
+    return false;
   }
 }
 

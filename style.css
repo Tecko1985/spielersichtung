@@ -39,6 +39,11 @@ header h1 { font-size: 20px; font-weight: 600; display: flex; align-items: cente
 .header-right { display: flex; align-items: center; gap: 14px; }
 .header-logo { height: 44px; width: auto; display: block; }
 .header-user { font-size: 13px; opacity: 0.95; display: flex; align-items: center; gap: 6px; }
+.header-status { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.15); }
+.header-status:empty { display: none; }
+.header-status.is-ok { background: rgba(110, 224, 138, 0.25); }
+.header-status.is-error { background: rgba(255, 120, 120, 0.35); font-weight: 600; }
+.header-status.is-pending { opacity: 0.85; }
 .file-status { font-size: 13px; opacity: 0.9; display: flex; align-items: center; gap: 8px; }
 .file-status .dot { width: 8px; height: 8px; border-radius: 50%; background: #ffb84d; }
 .file-status.connected .dot { background: #6ee08a; }
