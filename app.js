@@ -207,10 +207,15 @@ function openSpielerModal(id) {
   const player = isNew ? null : appData.players.find((p) => p.id === id);
   document.getElementById("spieler-modal-title").textContent = isNew ? "Neuer Spieler" : `${player.nachname}${player.vorname ? ", " + player.vorname : ""}`;
   document.getElementById("btn-delete-spieler").classList.toggle("hidden", isNew);
+  // Bei einem neuen Eintrag "Sichtung durch"/"Zuständigkeit" mit dem eingeloggten
+  // Nutzer vorbelegen (wer die Sichtung tatsächlich einträgt), statt leer zu lassen —
+  // bleibt editierbar, falls im Namen einer anderen Person erfasst wird.
+  const eigenerName = currentUser ? `${currentUser.vorname || ""} ${currentUser.nachname || ""}`.trim() || currentUser.username : "";
   PLAYER_FIELDS.forEach((f) => {
     const el = document.getElementById("pf-" + f);
     if (!el) return;
     if (el.type === "checkbox") el.checked = player ? !!player[f] : false;
+    else if (isNew && (f === "sichtungDurch" || f === "zustaendigkeit") && eigenerName) el.value = eigenerName;
     else el.value = player ? (player[f] || "") : (f === "geschlecht" ? "m" : "");
   });
   document.getElementById("pf-letzteBearbeitung").value = player && player.letzteBearbeitung ? isoToDisplay(player.letzteBearbeitung) : "(wird beim Speichern gesetzt)";

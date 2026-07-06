@@ -1,6 +1,17 @@
-const APP_VERSION = "1.0";
+const APP_VERSION = "1.1";
 
 const APP_CHANGELOG = [
+  {
+    version: "1.1",
+    groups: [
+      {
+        title: "Spieler-Sichtungen",
+        items: [
+          "\"Sichtung durch\" und \"Zuständigkeit\" werden bei einem neuen Spieler automatisch mit dem eigenen Namen vorbelegt, bleiben aber änderbar."
+        ]
+      }
+    ]
+  },
   {
     version: "1.0",
     groups: [
