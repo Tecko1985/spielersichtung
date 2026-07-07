@@ -301,7 +301,7 @@ button.btn.small { padding: 6px 12px; font-size: 13px; }
   vertical-align: middle;
   margin-left: 4px;
 }
-.card .version-badge, nav .version-badge { background: var(--blue-light); border-color: var(--blue-light); color: var(--blue); }
+.card .version-badge { background: var(--blue-light); border-color: var(--blue-light); color: var(--blue); }
 
 #changelog-list { display: flex; flex-direction: column; gap: 8px; }
 .changelog-entry { display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
