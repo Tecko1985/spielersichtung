@@ -461,6 +461,12 @@ async function init() {
 function setupListeners() {
   document.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => switchTab(b.dataset.tab)));
 
+  const versionBadgeHeader = document.getElementById("version-badge");
+  versionBadgeHeader.addEventListener("click", () => switchTab("einstellungen"));
+  versionBadgeHeader.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); switchTab("einstellungen"); }
+  });
+
   document.getElementById("spieler-search").addEventListener("input", renderSpielerListe);
   document.getElementById("filter-status").addEventListener("change", renderSpielerListe);
   document.getElementById("filter-zustaendigkeit").addEventListener("change", renderSpielerListe);
