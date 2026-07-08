@@ -1,39 +1,6 @@
-const APP_VERSION = "1.3";
+const APP_VERSION = "1.0";
 
 const APP_CHANGELOG = [
-  {
-    version: "1.3",
-    groups: [
-      {
-        title: "Versionsbadge",
-        items: [
-          "Der Versionshinweis oben neben dem Titel ist jetzt anklickbar und führt direkt zu dieser Änderungsübersicht."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.2",
-    groups: [
-      {
-        title: "Oberfläche",
-        items: [
-          "Doppelte Versionsanzeige im Einstellungen-Button entfernt."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.1",
-    groups: [
-      {
-        title: "Spieler-Sichtungen",
-        items: [
-          "\"Sichtung durch\" und \"Zuständigkeit\" werden bei einem neuen Spieler automatisch mit dem eigenen Namen vorbelegt, bleiben aber änderbar."
-        ]
-      }
-    ]
-  },
   {
     version: "1.0",
     groups: [
@@ -42,6 +9,7 @@ const APP_CHANGELOG = [
         items: [
           "Liste aller gesichteten Nachwuchsspieler mit Suche und Filtern (Verein, Position, Status, Zuständigkeit).",
           "Detailformular je Spieler: Person, Stützpunkt, Scouting-Einschätzung, Kontaktverlauf, Probetraining & Wechsel-Entscheidung.",
+          "\"Sichtung durch\" und \"Zuständigkeit\" werden bei einem neuen Spieler automatisch mit dem eigenen Namen vorbelegt, bleiben aber änderbar.",
           "Automatisch berechneter Status-Badge (Neu gesichtet / Kontakt läuft / Probetraining bestätigt / Gewechselt / Kein Wechsel).",
           "Datum der letzten Bearbeitung wird automatisch gesetzt, kein manuelles Nachtragen mehr nötig."
         ]
