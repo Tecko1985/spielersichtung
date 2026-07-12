@@ -1,4 +1,4 @@
-const APP_VERSION = "1.1";
+const APP_VERSION = "1.2";
 
 // Konfigurierbarer CSV-Export der Spieler-Liste (siehe initExportPanel/exportSpielerCsv
 // in app.js): jedes Feld einzeln per Checkbox an-/abwählbar, gruppiert wie das Spieler-
@@ -55,6 +55,17 @@ const EXPORT_FIELD_GROUPS = [
 ];
 
 const APP_CHANGELOG = [
+  {
+    version: "1.2",
+    groups: [
+      {
+        title: "Bearbeiten-Recht",
+        items: [
+          "Spieler/Vereine anlegen, bearbeiten und löschen jetzt an das Bearbeiten-Recht der Gruppen-Verwaltung gekoppelt statt an reinen Tool-Zugriff."
+        ]
+      }
+    ]
+  },
   {
     version: "1.1",
     groups: [

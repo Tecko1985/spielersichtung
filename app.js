@@ -41,6 +41,7 @@ function distinctValues(list, field) {
 // ---------- State ----------
 let appData = { players: [], clubs: [] };
 let currentUser = null;
+function canEdit() { return !!(currentUser && (currentUser.isAdmin || currentUser.canEdit)); }
 let editingPlayerId = null;
 let editingClubId = null;
 let persistTimer = null;
@@ -277,6 +278,7 @@ function renderAll() {
 
 // ---------- Spieler-Formular ----------
 function openSpielerModal(id) {
+  if (!canEdit()) return;
   editingPlayerId = id || null;
   const isNew = !id;
   const player = isNew ? null : appData.players.find((p) => p.id === id);
@@ -304,6 +306,7 @@ function closeSpielerModal() {
 }
 
 function saveSpieler() {
+  if (!canEdit()) return;
   const nachname = document.getElementById("pf-nachname").value.trim();
   if (!nachname) { alert("Bitte einen Nachnamen eingeben."); return; }
   let player = editingPlayerId ? appData.players.find((p) => p.id === editingPlayerId) : null;
@@ -322,6 +325,7 @@ function saveSpieler() {
 }
 
 function deleteSpieler() {
+  if (!canEdit()) return;
   if (!editingPlayerId) return;
   if (!confirm("Diesen Spieler wirklich löschen?")) return;
   appData.players = appData.players.filter((p) => p.id !== editingPlayerId);
@@ -360,6 +364,7 @@ function renderKontakteRows(kontakte) {
 }
 
 function openVereinModal(id) {
+  if (!canEdit()) return;
   editingClubId = id || null;
   const isNew = !id;
   const club = isNew ? null : appData.clubs.find((c) => c.id === id);
@@ -381,6 +386,7 @@ function closeVereinModal() {
 }
 
 function saveVerein() {
+  if (!canEdit()) return;
   const name = document.getElementById("cf-name").value.trim();
   if (!name) { alert("Bitte einen Vereinsnamen eingeben."); return; }
   let club = editingClubId ? appData.clubs.find((c) => c.id === editingClubId) : null;
@@ -406,6 +412,7 @@ function saveVerein() {
 }
 
 function deleteVerein() {
+  if (!canEdit()) return;
   if (!editingClubId) return;
   if (!confirm("Diesen Verein wirklich löschen?")) return;
   appData.clubs = appData.clubs.filter((c) => c.id !== editingClubId);
@@ -517,6 +524,8 @@ async function startApp() {
   } catch (_) {
     // Name im Header ist best-effort, App funktioniert auch ohne
   }
+  document.getElementById("btn-new-spieler").classList.toggle("hidden", !canEdit());
+  document.getElementById("btn-new-verein").classList.toggle("hidden", !canEdit());
 }
 
 async function init() {
