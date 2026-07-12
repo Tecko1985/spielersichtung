@@ -69,7 +69,21 @@
           <div class="empty-state hidden" id="spieler-empty">Keine Spieler gefunden.</div>
         </div>
 
+        <button class="btn secondary" id="btn-export-toggle">CSV-Export…</button>
         <button class="btn" id="btn-new-spieler">+ Neuer Spieler</button>
+
+        <div id="export-panel" class="card" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+            <h3 style="margin:0;">CSV-Export – Felder auswählen</h3>
+            <div class="btn-row" style="justify-content:flex-end;">
+              <button class="btn secondary small" id="btn-export-felder-alle">Alle</button>
+              <button class="btn secondary small" id="btn-export-felder-keine">Keine</button>
+            </div>
+          </div>
+          <div id="export-field-groups"></div>
+          <p class="muted" id="export-info-line" style="margin:10px 0 14px;"></p>
+          <button class="btn success small" id="btn-export-csv">CSV exportieren</button>
+        </div>
       </section>
 
       <section class="tab-section" id="tab-vereine">
@@ -242,8 +256,8 @@
     <option value="Nein (vorerst)"></option>
   </datalist>
 
-  <script src="config.js?v=1.0"></script>
+  <script src="config.js?v=1.1"></script>
   <script src="db.js?v=1.0"></script>
-  <script src="app.js?v=1.0"></script>
+  <script src="app.js?v=1.1"></script>
 </body>
 </html>

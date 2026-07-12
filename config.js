@@ -1,6 +1,72 @@
-const APP_VERSION = "1.0";
+const APP_VERSION = "1.1";
+
+// Konfigurierbarer CSV-Export der Spieler-Liste (siehe initExportPanel/exportSpielerCsv
+// in app.js): jedes Feld einzeln per Checkbox an-/abwählbar, gruppiert wie das Spieler-
+// Formular (gleiche Sektionstitel). "type" steuert nur die Formatierung des Zellwerts
+// (exportFieldValue in app.js) — ohne "type" wird der Rohwert unverändert exportiert.
+// Bewusst ohne "id" (interne UUID, keine Tabellenaussage).
+const EXPORT_FIELD_GROUPS = [
+  {
+    title: "Person",
+    fields: [
+      { key: "nachname", label: "Nachname" },
+      { key: "vorname", label: "Vorname" },
+      { key: "geschlecht", label: "Geschlecht", type: "geschlecht" },
+      { key: "geburtsdatum", label: "Geburtsdatum" },
+      { key: "verein", label: "Verein" },
+      { key: "position", label: "Position" },
+      { key: "trikotnummer", label: "Trikotnummer" },
+      { key: "passnummer", label: "Passnummer" }
+    ]
+  },
+  {
+    title: "Stützpunkt",
+    fields: [
+      { key: "stuetzpunktSpieler", label: "Ist Stützpunktspieler", type: "bool" },
+      { key: "stuetzpunkt", label: "Stützpunkt" }
+    ]
+  },
+  {
+    title: "Scouting",
+    fields: [
+      { key: "sichtungDurch", label: "Sichtung durch" },
+      { key: "bemerkungen", label: "Bemerkungen" }
+    ]
+  },
+  {
+    title: "Kontaktverlauf",
+    fields: [
+      { key: "zustaendigkeit", label: "Zuständigkeit" },
+      { key: "kontaktDurchWen", label: "Kontakt durch wen?" },
+      { key: "kontaktMitVerein", label: "Kontakt mit Verein" },
+      { key: "kontaktMitEltern", label: "Kontakt mit Eltern" },
+      { key: "rueckinfoNachEinladung", label: "Rückinfo nach der Einladung" }
+    ]
+  },
+  {
+    title: "Probetraining & Entscheidung",
+    fields: [
+      { key: "probetrainingAm", label: "Probetraining am" },
+      { key: "zusageProbetraining", label: "Zusage Probetraining" },
+      { key: "wechsel", label: "Wechsel" },
+      { key: "letzteBearbeitung", label: "Letzte Bearbeitung", type: "dateonly" }
+    ]
+  }
+];
 
 const APP_CHANGELOG = [
+  {
+    version: "1.1",
+    groups: [
+      {
+        title: "CSV-Export",
+        items: [
+          "Neuer Button „CSV-Export…“ bei der Spieler-Liste – jedes Feld (Person, Stützpunkt, Scouting, Kontaktverlauf, Probetraining & Entscheidung) einzeln per Checkbox wählbar.",
+          "Export berücksichtigt die aktuelle Such-/Filter-Einstellung."
+        ]
+      }
+    ]
+  },
   {
     version: "1.0",
     groups: [

@@ -137,6 +137,81 @@ function renderSpielerListe() {
   document.getElementById("spieler-count").textContent = `${list.length} von ${appData.players.length}`;
   document.getElementById("spieler-empty").classList.toggle("hidden", list.length > 0);
   document.getElementById("import-banner").classList.toggle("hidden", appData.players.length > 0);
+  updateExportInfoLine();
+}
+
+// ---------- CSV-Export (konfigurierbar) ----------
+// Jedes Feld einzeln per Checkbox wählbar (EXPORT_FIELD_GROUPS in config.js).
+// Exportiert immer genau die aktuell gefilterte/gesuchte Liste (filteredSpieler()).
+function initExportPanel() {
+  renderExportFieldCheckboxes();
+  document.getElementById("btn-export-toggle").addEventListener("click", () => {
+    const panel = document.getElementById("export-panel");
+    const willOpen = panel.style.display === "none";
+    panel.style.display = willOpen ? "" : "none";
+    if (willOpen) updateExportInfoLine();
+  });
+  document.getElementById("btn-export-felder-alle").addEventListener("click", () => setAllExportCheckboxes(true));
+  document.getElementById("btn-export-felder-keine").addEventListener("click", () => setAllExportCheckboxes(false));
+  document.getElementById("btn-export-csv").addEventListener("click", exportSpielerCsv);
+}
+function renderExportFieldCheckboxes() {
+  const wrap = document.getElementById("export-field-groups");
+  wrap.innerHTML = EXPORT_FIELD_GROUPS.map((group) => `
+    <div class="form-section-title">${escapeHtml(group.title)}</div>
+    <div class="form-grid">
+      ${group.fields.map((f) => `
+        <label class="checkbox-label"><input type="checkbox" class="export-field-cb" data-field="${escapeHtml(f.key)}" checked /> ${escapeHtml(f.label)}</label>
+      `).join("")}
+    </div>
+  `).join("");
+  wrap.querySelectorAll(".export-field-cb").forEach((cb) => cb.addEventListener("change", updateExportInfoLine));
+}
+function setAllExportCheckboxes(checked) {
+  document.querySelectorAll(".export-field-cb").forEach((cb) => { cb.checked = checked; });
+  updateExportInfoLine();
+}
+function updateExportInfoLine() {
+  const el = document.getElementById("export-info-line");
+  if (!el) return;
+  const total = document.querySelectorAll(".export-field-cb").length;
+  const checked = document.querySelectorAll(".export-field-cb:checked").length;
+  const rowCount = appData.players ? filteredSpieler().length : 0;
+  el.textContent = `${checked} von ${total} Feldern ausgewählt · exportiert ${rowCount} Spieler (aktuelle Filterung/Suche).`;
+}
+function csvCell(value) {
+  const s = value == null ? "" : String(value);
+  return /[;"\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+function exportFieldValue(f, p) {
+  const v = p[f.key];
+  switch (f.type) {
+    case "dateonly": return v ? isoToDisplay(v) : "";
+    case "bool": return v ? "Ja" : "Nein";
+    case "geschlecht": return v === "m" ? "männlich" : v === "w" ? "weiblich" : "";
+    default: return v == null ? "" : v;
+  }
+}
+function exportSpielerCsv() {
+  const selectedKeys = Array.from(document.querySelectorAll(".export-field-cb:checked")).map((cb) => cb.dataset.field);
+  if (!selectedKeys.length) { alert("Bitte mindestens ein Feld für den Export auswählen."); return; }
+  const rows = filteredSpieler();
+  if (!rows.length) { alert("Die aktuelle Filterung/Suche ergibt keine Treffer zum Exportieren."); return; }
+
+  const fieldLookup = new Map(EXPORT_FIELD_GROUPS.flatMap((g) => g.fields).map((f) => [f.key, f]));
+  const cols = selectedKeys.map((key) => fieldLookup.get(key)).filter(Boolean);
+  const lines = [cols.map((f) => f.label), ...rows.map((p) => cols.map((c) => exportFieldValue(c, p)))];
+  // Semikolon statt Komma + UTF-8-BOM: deutsches Excel erkennt das Trennzeichen
+  // damit automatisch beim Doppelklick und zeigt Umlaute korrekt.
+  const csv = String.fromCharCode(0xFEFF) + lines.map((line) => line.map(csvCell).join(";")).join("\r\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "spielersichtung_export_" + new Date().toISOString().slice(0, 10) + ".csv";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 8000);
 }
 
 // ---------- Vereins-Liste ----------
@@ -476,6 +551,7 @@ function setupListeners() {
     if (row) openSpielerModal(row.dataset.id);
   });
   document.getElementById("btn-new-spieler").addEventListener("click", () => openSpielerModal(null));
+  initExportPanel();
   document.getElementById("spieler-modal-close").addEventListener("click", closeSpielerModal);
   document.getElementById("btn-cancel-spieler").addEventListener("click", closeSpielerModal);
   document.getElementById("btn-save-spieler").addEventListener("click", saveSpieler);
