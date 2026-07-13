@@ -1,4 +1,4 @@
-const APP_VERSION = "1.2";
+const APP_VERSION = "1.0";
 
 // Konfigurierbarer CSV-Export der Spieler-Liste (siehe initExportPanel/exportSpielerCsv
 // in app.js): jedes Feld einzeln per Checkbox an-/abwählbar, gruppiert wie das Spieler-
