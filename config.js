@@ -56,29 +56,6 @@ const EXPORT_FIELD_GROUPS = [
 
 const APP_CHANGELOG = [
   {
-    version: "1.2",
-    groups: [
-      {
-        title: "Bearbeiten-Recht",
-        items: [
-          "Spieler/Vereine anlegen, bearbeiten und löschen jetzt an das Bearbeiten-Recht der Gruppen-Verwaltung gekoppelt statt an reinen Tool-Zugriff."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.1",
-    groups: [
-      {
-        title: "CSV-Export",
-        items: [
-          "Neuer Button „CSV-Export…“ bei der Spieler-Liste – jedes Feld (Person, Stützpunkt, Scouting, Kontaktverlauf, Probetraining & Entscheidung) einzeln per Checkbox wählbar.",
-          "Export berücksichtigt die aktuelle Such-/Filter-Einstellung."
-        ]
-      }
-    ]
-  },
-  {
     version: "1.0",
     groups: [
       {
@@ -95,6 +72,12 @@ const APP_CHANGELOG = [
         title: "Vereinsverzeichnis",
         items: [
           "Kontaktdaten gescouteter Vereine (Adresse, Website, mehrere Ansprechpartner je Verein)."
+        ]
+      },
+      {
+        title: "CSV-Export",
+        items: [
+          "Konfigurierbarer CSV-Export der Spieler-Liste – jedes Feld (Person, Stützpunkt, Scouting, Kontaktverlauf, Probetraining & Entscheidung) einzeln per Checkbox wählbar, berücksichtigt die aktuelle Such-/Filter-Einstellung."
         ]
       },
       {
