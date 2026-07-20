@@ -56,18 +56,6 @@ const EXPORT_FIELD_GROUPS = [
 
 const APP_CHANGELOG = [
   {
-    version: "1.1",
-    groups: [
-      {
-        title: "Speichern",
-        items: [
-          "Beim zügigen Bearbeiten – etwa wenn mehrere Spieler-Formulare oder Vereins-Einträge kurz nacheinander gespeichert wurden – erschien wiederholt die Meldung, die Daten seien zwischenzeitlich auf einem anderen Gerät geändert worden, obwohl niemand sonst gearbeitet hat. Die zuletzt gemachte Eingabe ging dabei verloren.",
-          "Es wird jetzt immer nur ein Speichervorgang gleichzeitig ausgeführt; Änderungen, die währenddessen anfallen, werden unmittelbar danach automatisch nachgespeichert."
-        ]
-      }
-    ]
-  },
-  {
     version: "1.0",
     groups: [
       {
