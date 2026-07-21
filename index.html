@@ -34,6 +34,7 @@
     <nav>
       <button data-tab="spieler" class="active">Spieler</button>
       <button data-tab="vereine">Vereine</button>
+      <button data-tab="info">Info</button>
       <button data-tab="einstellungen" style="margin-left:auto;">Einstellungen</button>
     </nav>
 
@@ -99,15 +100,20 @@
         <button class="btn" id="btn-new-verein">+ Neuer Verein</button>
       </section>
 
-      <section class="tab-section" id="tab-einstellungen">
+      <!-- ---------- Info ---------- -->
+      <section class="tab-section" id="tab-info">
         <div class="card">
           <h2>Über diese App <span class="version-badge" id="version-badge-2"></span></h2>
+          <p class="muted">Scouting-Tracker für beobachtete Spieler und deren Vereine.</p>
           <p class="muted" id="einstellungen-user"></p>
         </div>
         <div class="card">
           <h2>Änderungen</h2>
           <div id="changelog-list"></div>
         </div>
+      </section>
+
+      <section class="tab-section" id="tab-einstellungen">
       </section>
 
     </main>
@@ -258,6 +264,6 @@
 
   <script src="config.js?v=1.0"></script>
   <script src="db.js?v=1.0"></script>
-  <script src="app.js?v=1.0"></script>
+  <script src="app.js?v=1.1"></script>
 </body>
 </html>

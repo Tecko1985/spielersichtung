@@ -455,7 +455,7 @@ function switchTab(tab) {
   document.querySelectorAll(".tab-section").forEach((s) => s.classList.toggle("active", s.id === "tab-" + tab));
   if (tab === "spieler") renderSpielerListe();
   if (tab === "vereine") renderVereinListe();
-  if (tab === "einstellungen") renderVersionInfo();
+  if (tab === "info") renderVersionInfo();
 }
 
 // ---------- Gateway: Laden / Speichern / Konflikte ----------
@@ -576,9 +576,9 @@ function setupListeners() {
   document.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => switchTab(b.dataset.tab)));
 
   const versionBadgeHeader = document.getElementById("version-badge");
-  versionBadgeHeader.addEventListener("click", () => switchTab("einstellungen"));
+  versionBadgeHeader.addEventListener("click", () => switchTab("info"));
   versionBadgeHeader.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); switchTab("einstellungen"); }
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); switchTab("info"); }
   });
 
   document.getElementById("spieler-search").addEventListener("input", renderSpielerListe);
