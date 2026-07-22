@@ -90,7 +90,8 @@ const APP_CHANGELOG = [
         title: "Anmeldung & Speicherung",
         items: [
           "Automatische Nextcloud-Synchronisierung über die zentrale Anmeldung (Tools-Übersicht) — kein separates Passwort auf dem Gerät nötig.",
-          "Sichtbare Rückmeldung im Kopfbereich, ob Änderungen gespeichert wurden; gleichzeitige Änderungen von zwei Geräten werden erkannt und gemeldet."
+          "Sichtbare Rückmeldung im Kopfbereich, ob Änderungen gespeichert wurden; gleichzeitige Änderungen von zwei Geräten werden erkannt und gemeldet.",
+          "Speichern startet ohne Verzögerung. Wird die Seite geschlossen, bevor die Bestätigung da ist, geht der Stand trotzdem noch raus — und es kommt eine Rückfrage, falls das einmal nicht mehr möglich sein sollte."
         ]
       }
     ]

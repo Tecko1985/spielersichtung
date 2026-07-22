@@ -59,6 +59,38 @@ async function gatewaySave(dataObj) {
   gatewayRev = typeof body.rev === "string" ? body.rev : null;
 }
 
+// Letzter Rettungsversuch beim Verlassen der Seite. Ein normaler fetch wird beim
+// Entladen abgebrochen — mit keepalive überlebt der Request das Schließen des Tabs.
+// Bewusst mit gatewayRev: ein unbedingter Schreibvorgang würde hier zwar immer
+// durchgehen, könnte aber die Änderung eines anderen Geräts überschreiben, ohne dass
+// es jemand merkt. Lieber ein wirkungsloser 409 als stiller fremder Datenverlust.
+//
+// Grenze: Browser erlauben für keepalive-Requests nur 64 KB Body. Bei ~600 Byte je
+// Spieler ist die irgendwo jenseits von 100 Spielern erreicht — dann geht auf diesem
+// Weg NICHTS mehr raus. Deshalb meldet die Funktion zurück, ob sie abschicken konnte;
+// der Aufrufer (beforeunload in app.js) fragt in dem Fall stattdessen nach.
+const KEEPALIVE_MAX_BYTES = 64 * 1024;
+
+function gatewaySaveBeacon(dataObj) {
+  const token = getSessionToken();
+  if (!token) return false;
+  const payload = { action: "dav-save", app: GATEWAY_APP_ID, data: dataObj };
+  if (gatewayRev) payload.rev = gatewayRev;
+  const body = JSON.stringify(payload);
+  if (new Blob([body]).size > KEEPALIVE_MAX_BYTES) return false;
+  try {
+    fetch(GATEWAY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body,
+      keepalive: true
+    });
+    return true;
+  } catch (_) {
+    return false; // z.B. wenn der Browser den keepalive-Request doch ablehnt
+  }
+}
+
 // Liefert {username, isAdmin, groupIds, vorname, nachname, canEdit} der eingeloggten Person.
 async function fetchMe() {
   return gatewayRequest({ action: "me", app: GATEWAY_APP_ID });

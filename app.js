@@ -44,7 +44,11 @@ let currentUser = null;
 function canEdit() { return !!(currentUser && (currentUser.isAdmin || currentUser.canEdit)); }
 let editingPlayerId = null;
 let editingClubId = null;
-let persistTimer = null;
+// True, sobald eine Änderung noch nicht bestätigt in Nextcloud liegt — egal ob der
+// Schreibvorgang noch aussteht, gerade läuft oder fehlgeschlagen ist. Steuert die
+// Rückfrage beim Verlassen der Seite (beforeunload in setupListeners).
+let ungespeicherteAenderungen = false;
+let letzterSaveFehlgeschlagen = false;
 
 const PLAYER_FIELDS = [
   "nachname", "vorname", "geschlecht", "geburtsdatum", "verein", "position", "trikotnummer", "passnummer",
@@ -443,7 +447,7 @@ function handleImportFile(file) {
     appData.players = players;
     appData.clubs = clubs;
     renderAll();
-    const ok = await saveNow();
+    const ok = await persist();
     if (ok) alert(`Import erfolgreich gespeichert: ${players.length} Spieler und ${clubs.length} Vereine.`);
   };
   reader.readAsText(file, "utf-8");
@@ -466,16 +470,15 @@ function setSaveStatus(text, kind) {
   el.className = "header-status" + (kind ? " is-" + kind : "");
 }
 
+// Schreibt sofort, ohne Debounce. Alle Aufrufer sind diskrete Klicks (Speichern bzw.
+// Löschen im Modal), niemand tippt hier in ein automatisch gesichertes Feld — es gibt
+// also nichts zu entprellen. Schnell aufeinanderfolgende Änderungen fasst ohnehin der
+// In-Flight-Guard unten zusammen, nicht ein Timer. Die frühere Wartezeit von 300 ms
+// hat nur den Zeitraum verlängert, in dem eine Änderung bereits gespeichert AUSSAH
+// (Modal zu, Liste zeigt sie) und trotzdem noch nirgends lag.
+// Gibt das Save-Promise zurück, damit der Import auf die Bestätigung warten kann.
 function persist() {
-  clearTimeout(persistTimer);
-  setSaveStatus("Änderung noch nicht gespeichert…", "pending");
-  persistTimer = setTimeout(doPersist, 300);
-}
-
-// Sofort speichern (ohne Debounce) und Erfolg zurückmelden — für den Import,
-// der erst nach bestätigtem Speichern als abgeschlossen gelten soll.
-async function saveNow() {
-  clearTimeout(persistTimer);
+  ungespeicherteAenderungen = true;
   return doPersist();
 }
 
@@ -515,12 +518,31 @@ async function writeToGateway() {
     await gatewaySave(appData);
     const t = new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
     setSaveStatus("Gespeichert " + t, "ok");
+    letzterSaveFehlgeschlagen = false;
+    // Nur entwarnen, wenn seit dem Start dieses Schreibvorgangs nichts Neues
+    // dazugekommen ist — sonst dreht die Schleife gleich noch eine Runde und es
+    // liegt weiterhin etwas Unbestätigtes an.
+    if (!saveDirty) ungespeicherteAenderungen = false;
     return true;
   } catch (e) {
-    if (e instanceof ConflictError) { await reloadAfterConflict(); setSaveStatus("Von anderem Gerät aktualisiert", ""); return false; }
-    if (e instanceof NotLoggedInError) { showConnectScreen("Sitzung abgelaufen — bitte neu anmelden."); return false; }
+    if (e instanceof ConflictError) {
+      // Nach dem Neuladen ist der lokale Stand der Server-Stand: es gibt nichts mehr
+      // zu schreiben und damit auch nichts, wovor beim Verlassen zu warnen wäre.
+      // Scheitert das Neuladen, bleibt die eigene Änderung liegen — dann Warnung an.
+      const neuGeladen = await reloadAfterConflict();
+      setSaveStatus("Von anderem Gerät aktualisiert", "");
+      if (neuGeladen) { ungespeicherteAenderungen = false; letzterSaveFehlgeschlagen = false; }
+      else letzterSaveFehlgeschlagen = true;
+      return false;
+    }
+    if (e instanceof NotLoggedInError) {
+      showConnectScreen("Sitzung abgelaufen — bitte neu anmelden.");
+      letzterSaveFehlgeschlagen = true;
+      return false;
+    }
     console.error("Speichern fehlgeschlagen", e);
     setSaveStatus("Nicht gespeichert", "error");
+    letzterSaveFehlgeschlagen = true;
     alert("Speichern fehlgeschlagen: " + e.message);
     return false;
   }
@@ -532,8 +554,10 @@ async function reloadAfterConflict() {
     appData = (data && Array.isArray(data.players) && Array.isArray(data.clubs)) ? data : { players: [], clubs: [] };
     renderAll();
     alert("Die Daten wurden zwischenzeitlich auf einem anderen Gerät geändert — die aktuelle Version wurde neu geladen. Bitte die letzte Änderung bei Bedarf erneut vornehmen.");
+    return true;
   } catch (e) {
     console.error("Neuladen nach Konflikt fehlgeschlagen", e);
+    return false;
   }
 }
 
@@ -623,6 +647,23 @@ function setupListeners() {
     if (e.key !== "Escape") return;
     if (!document.getElementById("spieler-modal").classList.contains("hidden")) closeSpielerModal();
     if (!document.getElementById("verein-modal").classList.contains("hidden")) closeVereinModal();
+  });
+
+  // Sicherheitsnetz für die Sekunde zwischen Klick und bestätigtem Schreiben: der
+  // laufende fetch wird beim Entladen der Seite abgebrochen, deshalb geht der aktuelle
+  // Stand hier noch einmal per keepalive raus — der überlebt das Schließen des Tabs.
+  //
+  // Nachgefragt wird NUR, wenn dieser Weg nicht trägt: wenn der Rettungsversuch gar
+  // nicht erst rausging (Datenbestand über der 64-KB-Grenze für keepalive, siehe
+  // gatewaySaveBeacon) oder der letzte reguläre Versuch schon scheiterte. Sonst käme
+  // die Rückfrage bei JEDEM Schließen kurz nach einer Änderung — also ständig — und
+  // würde reflexhaft weggeklickt, gerade dann wenn sie einmal wirklich zählt.
+  window.addEventListener("beforeunload", (e) => {
+    if (!ungespeicherteAenderungen) return;
+    const abgeschickt = gatewaySaveBeacon(appData);
+    if (abgeschickt && !letzterSaveFehlgeschlagen) return;
+    e.preventDefault();
+    e.returnValue = "";
   });
 }
 
