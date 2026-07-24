@@ -65,7 +65,8 @@ const APP_CHANGELOG = [
           "Detailformular je Spieler: Person, Stützpunkt, Scouting-Einschätzung, Kontaktverlauf, Probetraining & Wechsel-Entscheidung.",
           "\"Sichtung durch\" und \"Zuständigkeit\" werden bei einem neuen Spieler automatisch mit dem eigenen Namen vorbelegt, bleiben aber änderbar.",
           "Automatisch berechneter Status-Badge (Neu gesichtet / Kontakt läuft / Probetraining bestätigt / Gewechselt / Kein Wechsel).",
-          "Datum der letzten Bearbeitung wird automatisch gesetzt, kein manuelles Nachtragen mehr nötig."
+          "Datum der letzten Bearbeitung wird automatisch gesetzt, kein manuelles Nachtragen mehr nötig.",
+          "Leerer Einstellungen-Tab entfernt — er hatte keine Inhalte; die Versionshistorie steht im Info-Tab."
         ]
       },
       {
