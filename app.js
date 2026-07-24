@@ -580,6 +580,11 @@ async function startApp() {
   }
   document.getElementById("btn-new-spieler").classList.toggle("hidden", !canEdit());
   document.getElementById("btn-new-verein").classList.toggle("hidden", !canEdit());
+  // Export erst ab Bearbeiten (User-Entscheidung 2026-07-24, kehrt den früheren
+  // Grundsatz "Export ist keine Änderung" um): Nur-Seher bekommen den
+  // CSV-Export nicht angeboten — PII Minderjähriger soll nicht als Datei
+  // abfließen. Das Panel selbst bleibt display:none, solange der Button fehlt.
+  document.getElementById("btn-export-toggle").classList.toggle("hidden", !canEdit());
 }
 
 async function init() {
