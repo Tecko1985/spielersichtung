@@ -2,3 +2,6 @@
 # (wird ueber GitHub Pages oeffentlich ausgeliefert, s. Datenimport in app.js)
 *import*.json
 seed-data.*
+
+# Lokales Claude-Projektgedaechtnis, nicht Teil des oeffentlichen Repos
+CLAUDE.md
