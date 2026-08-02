@@ -56,55 +56,53 @@ const EXPORT_FIELD_GROUPS = [
 
 const APP_CHANGELOG = [
   {
-    version: "1.1",
-    groups: [
-      {
-        title: "Bedienung am Handy",
-        items: [
-          "Eingabefelder sind am Handy mindestens 16 Pixel groß. Dadurch zoomt der iPhone-Browser beim Antippen eines Feldes nicht mehr ungefragt in die Seite hinein und bleibt danach verschoben stehen."
-        ]
-      }
-    ]
-  },
-  {
     version: "1.0",
     groups: [
       {
         title: "Spieler-Sichtungen",
         items: [
-          "Liste aller gesichteten Nachwuchsspieler mit Suche und Filtern (Verein, Position, Status, Zuständigkeit).",
-          "Detailformular je Spieler: Person, Stützpunkt, Scouting-Einschätzung, Kontaktverlauf, Probetraining & Wechsel-Entscheidung.",
-          "\"Sichtung durch\" und \"Zuständigkeit\" werden bei einem neuen Spieler automatisch mit dem eigenen Namen vorbelegt, bleiben aber änderbar.",
-          "Automatisch berechneter Status-Badge (Neu gesichtet / Kontakt läuft / Probetraining bestätigt / Gewechselt / Kein Wechsel).",
-          "Datum der letzten Bearbeitung wird automatisch gesetzt, kein manuelles Nachtragen mehr nötig.",
-          "Leerer Einstellungen-Tab entfernt — er hatte keine Inhalte; die Versionshistorie steht im Info-Tab.",
-          "Der CSV-Export steht nur noch Bearbeitern zur Verfügung — reine Betrachter sehen den Export-Knopf nicht mehr."
+          "Liste aller gesichteten Nachwuchsspieler mit Suche und Filtern nach Verein, Position, Status und Zuständigkeit.",
+          "Detailformular je Spieler: Person, Stützpunkt, Scouting-Einschätzung, Kontaktverlauf, Probetraining und Wechsel-Entscheidung.",
+          "„Sichtung durch“ und „Zuständigkeit“ sind bei einem neuen Spieler mit dem eigenen Namen vorbelegt und bleiben änderbar.",
+          "Der Status ergibt sich von selbst aus dem Stand des Vorgangs: neu gesichtet, Kontakt läuft, Probetraining bestätigt, gewechselt oder kein Wechsel.",
+          "Das Datum der letzten Bearbeitung setzt die App selbst — es muss nichts nachgetragen werden."
         ]
       },
       {
         title: "Vereinsverzeichnis",
         items: [
-          "Kontaktdaten gescouteter Vereine (Adresse, Website, mehrere Ansprechpartner je Verein)."
+          "Kontaktdaten der gescouteten Vereine mit Adresse, Website und mehreren Ansprechpartnern je Verein."
         ]
       },
       {
-        title: "CSV-Export",
+        title: "Export",
         items: [
-          "Konfigurierbarer CSV-Export der Spieler-Liste – jedes Feld (Person, Stützpunkt, Scouting, Kontaktverlauf, Probetraining & Entscheidung) einzeln per Checkbox wählbar, berücksichtigt die aktuelle Such-/Filter-Einstellung."
+          "CSV-Export der Spielerliste, frei zusammenstellbar: jedes Feld aus Person, Stützpunkt, Scouting, Kontaktverlauf und Entscheidung ist einzeln wählbar.",
+          "Der Export übernimmt die gerade eingestellte Suche und Filterung."
         ]
       },
       {
-        title: "Datenübernahme",
+        title: "Wer darf was",
         items: [
-          "Einmaliger Import der bestehenden Scouting-Excel-Liste (82 Spieler, 13 Vereine) per Knopfdruck — der Ablageordner in der Nextcloud wird dabei automatisch angelegt."
+          "Sehen: Spielerliste, Detailansicht und Vereinsverzeichnis, schreibgeschützt.",
+          "Bearbeiten: Spieler und Vereine anlegen, ändern und löschen. Dazu der CSV-Export.",
+          "Der Reiter „Info“ ist für alle sichtbar."
         ]
       },
       {
-        title: "Anmeldung & Speicherung",
+        title: "Bedienung am Handy",
         items: [
-          "Automatische Nextcloud-Synchronisierung über die zentrale Anmeldung (Tools-Übersicht) — kein separates Passwort auf dem Gerät nötig.",
-          "Sichtbare Rückmeldung im Kopfbereich, ob Änderungen gespeichert wurden; gleichzeitige Änderungen von zwei Geräten werden erkannt und gemeldet.",
-          "Speichern startet ohne Verzögerung. Wird die Seite geschlossen, bevor die Bestätigung da ist, geht der Stand trotzdem noch raus — und es kommt eine Rückfrage, falls das einmal nicht mehr möglich sein sollte."
+          "Die Ansicht ist für das Handy gebaut und funktioniert dort vollständig.",
+          "Eingabefelder sind mindestens 16 Pixel groß, damit der iPhone-Browser beim Antippen nicht ungefragt in die Seite hineinzoomt und verschoben stehen bleibt."
+        ]
+      },
+      {
+        title: "Daten & Speicherung",
+        items: [
+          "Gespeichert wird in der Vereins-Nextcloud über die zentrale Anmeldung der Tools-Übersicht — ein eigenes Passwort braucht es nicht.",
+          "Im Kopfbereich steht sichtbar, ob der letzte Stand gespeichert wurde.",
+          "Das Speichern startet ohne Verzögerung. Wird die Seite geschlossen, bevor die Bestätigung da ist, geht der Stand trotzdem noch raus — und es kommt eine Rückfrage, falls das einmal nicht mehr möglich ist.",
+          "Ändern zwei Geräte gleichzeitig denselben Stand, erkennt die App das und meldet es."
         ]
       }
     ]
